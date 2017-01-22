@@ -1,28 +1,10 @@
-local function isAir(pos)
-	local nn = minetest.get_node(pos).name
-	return nn == "air"
-end
+local modpath = minetest.get_modpath(minetest.get_current_modname())
+local worldpath = minetest.get_worldpath()
 
-local function isVirus(pos)
-	local nn = minetest.get_node(pos).name
-	return nn == "prismavation:virus"
-end
-
-local function makeVirus(pos)
-	if isAir(pos) then
-		if not isVirus(pos) then
-			minetest.set_node(pos, {name="prismavation:virus"})
-		end
-	end
-end
-
-minetest.register_node("prismavation:virus", {
-	description = "Prismavirus",
-	tiles = {"prismablock.png"},
-	drop = "",
-	groups = {unbreakable = 1, not_in_creative_inventory = 0}, -- For Map Tools' admin pickaxe.
-	-- sounds = default.node_sound_stone_defaults(),
-})
+dofile(modpath.."/claw.lua")
+dofile(modpath.."/virus.lua")
+dofile(modpath.."/armor.lua")
+dofile(modpath.."/Gem.lua")
 
 minetest.register_node("prismavation:cage",{
 	description = "Prisma Cage",
@@ -43,93 +25,9 @@ minetest.register_node("prismavation:dimension", {
 		end
 })
 
-minetest.register_craftitem("prismavation:gem",{
-	description = "Prisma",
-	inventory_image = "prisma_gem.png"
-})
-
 minetest.register_craftitem("prismavation:item",{
 	description = "Item.name(/())",
 	inventory_image = "prisma_item.png"
-})
-
-minetest.register_tool("prismavation:helmet_prisma", {
-	description = "Prisma Helmet",
-	inventory_image = "prisma_helmet_inv.png",
-	groups = {
-		armor_head = 5,
-		armor_heal = 0,
-		armor_use = 2000
-	},
-	wear = 0,
-})
-
-minetest.register_tool("prismavation:chestplate_prisma", {
-	description = "Prisma Chestplate",
-	inventory_image = "prisma_chestplate_inv.png",
-	groups = {
-		armor_torso = 10,
-		armor_heal = 0,
-		armor_use = 2000
-	},
-	wear = 0,
-})
-
-minetest.register_tool("prismavation:leggings_prisma", {
-	description = "Prisma Leggings",
-	inventory_image = "prisma_leggings_inv.png",
-	groups = {
-		armor_legs = 5,
-		armor_heal = 0,
-		armor_use = 2000
-	},
-	wear = 0,
-})
-
-minetest.register_tool("prismavation:boots_prisma", {
-	description = "Prisma Boots",
-	inventory_image = "prisma_boots_inv.png",
-	groups = {
-		armor_feet = 5,
-		armor_heal = 0,
-		armor_use = 2000
-	},
-	wear = 0,
-})
-
-minetest.register_craft({
-	output = "prismavation:helmet_prisma",
-	recipe = {
-		{"prismavation:gem", "prismavation:gem", "prismavation:gem"},
-		{"prismavation:gem", "", "prismavation:gem"},
-		{"", "", ""},
-	},
-})
-
-minetest.register_craft({
-	output = "prismavation:chestplate_prisma",
-	recipe = {
-		{"prismavation:gem", "", "prismavation:gem"},
-		{"prismavation:gem", "prismavation:gem", "prismavation:gem"},
-		{"prismavation:gem", "prismavation:gem", "prismavation:gem"},
-	},
-})
-
-minetest.register_craft({
-	output = "prismavation:leggings_prisma",
-	recipe = {
-		{"prismavation:gem", "prismavation:gem", "prismavation:gem"},
-		{"prismavation:gem", "", "prismavation:gem"},
-		{"prismavation:gem", "", "prismavation:gem"},
-	},
-})
-
-minetest.register_craft({
-	output = "prismavation:boots_prisma",
-	recipe = {
-		{"prismavation:gem", "", "prismavation:gem"},
-		{"prismavation:gem", "", "prismavation:gem"},
-	},
 })
 
 minetest.register_node("prismavation:ore", {
@@ -192,45 +90,6 @@ minetest.register_node("prismavation:tnt",{
 	end
 })
 
-minetest.register_abm({
-	nodenames = {"prismavation:virus"},
-	light_source = 1,
-	interval = 8,
-	chance = 10,
-	action = function(pos)
-		-- up
-		makeVirus({x=pos.x, y=pos.y-1, z=pos.z-1})
-		makeVirus({x=pos.x-1, y=pos.y-1, z=pos.z-1})
-		makeVirus({x=pos.x+1, y=pos.y-1, z=pos.z-1})
-		makeVirus({x=pos.x, y=pos.y, z=pos.z-1})
-		makeVirus({x=pos.x-1, y=pos.y, z=pos.z-1})
-		makeVirus({x=pos.x+1, y=pos.y, z=pos.z-1})
-		makeVirus({x=pos.x, y=pos.y+1, z=pos.z-1})
-		makeVirus({x=pos.x-1, y=pos.y+1, z=pos.z-1})
-		makeVirus({x=pos.x+1, y=pos.y+1, z=pos.z-1})
-		-- flat
-		makeVirus({x=pos.x, y=pos.y-1, z=pos.z})
-		makeVirus({x=pos.x-1, y=pos.y-1, z=pos.z})
-		makeVirus({x=pos.x+1, y=pos.y-1, z=pos.z})
-		-- makeVirus({x=pos.x, y=pos.y, z=pos.z})
-		makeVirus({x=pos.x-1, y=pos.y, z=pos.z})
-		makeVirus({x=pos.x+1, y=pos.y, z=pos.z})
-		makeVirus({x=pos.x, y=pos.y+1, z=pos.z})
-		makeVirus({x=pos.x-1, y=pos.y+1, z=pos.z})
-		makeVirus({x=pos.x+1, y=pos.y+1, z=pos.z})
-		-- down
-		makeVirus({x=pos.x, y=pos.y-1, z=pos.z+1})
-		makeVirus({x=pos.x-1, y=pos.y-1, z=pos.z+1})
-		makeVirus({x=pos.x+1, y=pos.y-1, z=pos.z+1})
-		makeVirus({x=pos.x, y=pos.y, z=pos.z+1})
-		makeVirus({x=pos.x-1, y=pos.y, z=pos.z+1})
-		makeVirus({x=pos.x+1, y=pos.y, z=pos.z+1})
-		makeVirus({x=pos.x, y=pos.y+1, z=pos.z+1})
-		makeVirus({x=pos.x-1, y=pos.y+1, z=pos.z+1})
-		makeVirus({x=pos.x+1, y=pos.y+1, z=pos.z+1})
-	end,
-})
-
 minetest.register_tool("prismavation:bomb", {
 	description = "Prismavation Bomb",
 	inventory_image = "Prisma_bomb.png",
@@ -289,15 +148,6 @@ minetest.register_tool("prismavation:axe", {
 		-- screwdriver_handler(itemstack, user, pointed_thing, screwdriver.ROTATE_AXIS)
 		return itemstack
 	end,
-})
-
-minetest.register_craft({
-	output = "prismavation:virus",
-	recipe = {
-		{"dye:magenta", "dye:red", "dye:red"},
-		{"dye:red", "shields:shield_admin", "dye:red"},
-		{"dye:red", "dye:red", "dye:grey"}
-	}
 })
 
 minetest.register_craft({
